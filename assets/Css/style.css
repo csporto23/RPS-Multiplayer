@@ -1,0 +1,15 @@
+body{
+    max-height: 960px;
+    max-width: relative;
+    text: white;
+}
+
+
+#startButton {
+    padding-top: 15%;
+    margin-bottom: 4px;
+}
+
+.container { 
+    display: none;
+}
