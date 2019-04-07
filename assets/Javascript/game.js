@@ -14,12 +14,15 @@ var config = {
 
   //if person clicks new game
   $("#new-game").on("click", function(){
-      const playerOne = prompt("player one:", "UserName")
+      const playerOne = prompt("player one:", "UserName");
       $("#userNameOne").text(playerOne);
+
       $(".container").css("display", "block");
       $("#startButton").closest('div').remove();
+
       var idNumber = Math.floor(Math.random() * 300);
       var gameIdDiv = $("<div id='idNumber' class='text-white'>").text(idNumber)
+
       $("#game-id").append(gameIdDiv)
   });
 
@@ -27,11 +30,37 @@ var config = {
   //if person clicks join game
   $("#join-game").on("click", function(){
       prompt("game id:")
-      prompt("player two:")
+      const playerTwo = prompt("player two:", "UserName");
+      $("#userNameTwo").text(playerTwo);
     $(".container").css("display", "block");
     $("#startButton").closest('div').remove();
 });
 
+
+var addComment = "";
+
+$("#submit-comment").on("click", function(event){
+    event.preventDefault();
+
+    addComment = $("#addComment").val().trim();
+
+    database.ref().push({
+        addComment: addComment,
+    });
+
+});
+
+database.ref().on("child_added", function(snapshot) {
+
+    var sv = snapshot.val();
+   
+
+    $("#allComments").text(addComment);
+
+
+}, function(errorObject) {
+    console.log("Errors handled: " + errorObject.code);
+  });
 // const playerOne = $("")
 // const playerOne = $("")
 
