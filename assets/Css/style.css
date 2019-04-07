@@ -1,7 +1,7 @@
 body{
     max-height: 960px;
     max-width: relative;
-    text: white;
+    color: white;
 }
 
 
@@ -12,4 +12,18 @@ body{
 
 .container { 
     display: none;
+}
+
+#idNumber {
+    margin-left: 2px;
+}
+
+#playerOneDiv {
+    background-color: navajowhite;
+
+}
+
+#playerTwoDiv {
+    background-color: navajowhite;
+
 }
