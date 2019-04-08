@@ -40,3 +40,26 @@ body{
     max-height: 200px;
     overflow: hidden;
 }
+
+#userNameOne {
+    color: green;
+    text: bold;
+    font-size: 18px;
+    background-color: white;
+    margin-bottom: 4px;
+    opacity: .7;
+}
+
+#userNameTwo {
+    color: Red;
+    text: bold;
+    font-size: 18px;
+    background-color: white;
+    margin-bottom: 4px;
+    opacity: .7;
+}
+
+#tie {
+    text: bold;
+    font-size: 24px;
+}

@@ -11,11 +11,39 @@ var config = {
   firebase.initializeApp(config);
   var database = firebase.database();
 
+  var playerOne = {
+      name: playerOneName,
+      wins: p1wins,
+      loses: p1loses,
+      choice: playerOneChoice,
+      comment: commentBox
+  }
+
+  var playerTwo = {
+    name: playerOneName,
+    wins: p1wins,
+    loses: p1loses,
+    choice: playerOneChoice,
+    comment: addComment
+
+}
+
+  var p1wins = 0;
+  var p1loses = 0;
+  var p2wins = 0;
+  var p2loses = 0;
+  var tie = 0;
+
+  var playerOneChoice = "";
+  var playerTwoChoice = "";
+
+  var playerOneName = "";
+  var playerTwoName = "";
 
   //if person clicks new game
   $("#new-game").on("click", function(){
-      const playerOne = prompt("player one:", "UserName");
-      $("#userNameOne").text(playerOne);
+       var playerOneName = prompt("Player one Name:", "UserName");
+       $("#userNameOne").text(playerOneName);
 
       $(".container").css("display", "block");
       $("#startButton").closest('div').remove();
@@ -24,15 +52,23 @@ var config = {
       var gameIdDiv = $("<div id='idNumber' class='text-white'>").text(idNumber)
 
       $("#game-id").append(gameIdDiv)
+
+      database.ref().push({
+        playerOne: playerOneName,
+    });
+
   });
 
 
   //if person clicks join game
   $("#join-game").on("click", function(){
       prompt("game id:")
-      const playerTwo = prompt("player two:", "UserName");
-      $("#userNameTwo").text(playerTwo);
+
+      var playerTwoName = prompt("player two:", "UserName");
+      $("#userNameTwo").text(playerTwoName);
+
     $(".container").css("display", "block");
+
     $("#startButton").closest('div').remove();
 });
 
@@ -56,31 +92,57 @@ database.ref().on("child_added", function(snapshot) {
    
 
     var commentBox = $("<p>").text(sv.addComment);
+    //$("#commentBox").prepend(commentBox.html() + sv.playerOneName);
     $("#commentBox").prepend(commentBox);
-
 
 }, function(errorObject) {
     console.log("Errors handled: " + errorObject.code);
   });
-// const playerOne = $("")
-// const playerOne = $("")
 
-// var playerOneChoice = "";
-// var playerTwoChoice = "";
+ 
 
-// let pOneWins = 0;
-// let pOneLoses = 0;
-// let pTwoLoses = 0;
-// let pTwoWins = 0;
+  if (playerOneChoice === "rock" && playerTwoChoice === "scissors") {
+      p1wins++, p2loses++ 
+  } else {
+      p1loses++, p2wins++
+  }
 
-// if(playerOne) {
-//     $("#rockOne").on("click", function() {
-//         playerOneChoice = "rock"
-//     });
-//     $("#paperOne").on("click", function() {
-//         playerOneChoice = "paper"
-//     });
-//     $("#scissorsOne").on("click", function() {
-//         playerOneChoice = "scissors"
-//     });
-// }
+  if (playerOneChoice === "scissors" && playerTwoChoice === "paper") {
+    p1wins++, p2loses++ 
+} else {
+    p1loses++, p2wins++
+}
+
+if (playerOneChoice === "paper" && playerTwoChoice === "rock") {
+    p1wins++, p2loses++ 
+} else {
+    p1loses++, p2wins++
+}
+
+if (playerOneChoice === playerTwoChoice) {
+    tie++
+}
+
+ if(playerOne) {
+     $("#rockOne").on("click", function() {
+         playerOneChoice = "rock"
+     });
+     $("#paperOne").on("click", function() {
+         playerOneChoice = "paper"
+     });
+     $("#scissorsOne").on("click", function() {
+         playerOneChoice = "scissors"
+     });
+ }
+
+ if(playerTwo) {
+    $("#rockOne").on("click", function() {
+        playerTwoChoice = "rock"
+    });
+    $("#paperOne").on("click", function() {
+        playerTwoChoice = "paper"
+    });
+    $("#scissorsOne").on("click", function() {
+        playerTwoChoice = "scissors"
+    });
+}
