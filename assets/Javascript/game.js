@@ -56,30 +56,47 @@ var config = {
       $("#startButton").closest('div').remove();
 
       var idNumber = Math.floor(Math.random() * 300);
-      var gameIdDiv = $("<div id='idNumber' class='text-white'>").text(idNumber)
+      $("#game-id").text(idNumber)
 
-      $("#game-id").append(gameIdDiv)
+    //set initial Player one too firebase by gameId
+     playerOne = {
+         name: playerOneName,
+         win: 0,
+         loss: 0,
+         tie: 0,
+         choice: ""
+     }
 
-      database.ref().push({
-        playerOne: playerOneName,
-    });
+     database.ref().child($("#game-id").text() + "/gameId/playerOne").set(playerOne);
 
   });
 
 
   //if person clicks join game
   $("#join-game").on("click", function(){
-      prompt("game id:")
-
+    //   var joinId = prompt("game id:", "Number");
+    //   $("#idNumber").append(joinId)
       var playerTwoName = prompt("player two:", "UserName");
       $("#userNameTwo").text(playerTwoName);
 
     $(".container").css("display", "block");
 
     $("#startButton").closest('div').remove();
+
+     //set initial Player two too firebase by gameId
+     playerTwo = {
+        name: playerTwoName,
+        win: 0,
+        loss: 0,
+        tie: 0,
+        choice: ""
+    }
+
+    database.ref().child($("#game-id").text() + "/gameId/playerTwo").set(playerTwo);
+
 });
 
-
+//adding comments by userName
 var addComment = "";
 
 $("#submit-comment").on("click", function(event){
@@ -105,7 +122,9 @@ database.ref().on("child_added", function(snapshot) {
     console.log("Errors handled: " + errorObject.code);
   });
 
- 
+
+
+ //rock paper scissors game logic
 
   if (playerOneChoice === "rock" && playerTwoChoice === "scissors") {
       p1wins++, p2loses++ 
