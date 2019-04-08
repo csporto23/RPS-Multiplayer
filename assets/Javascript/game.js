@@ -83,7 +83,6 @@ $("#submit-comment").on("click", function(event){
     database.ref().push({
         addComment: addComment,
     });
-
 });
 
 database.ref().on("child_added", function(snapshot) {
@@ -126,6 +125,7 @@ if (playerOneChoice === playerTwoChoice) {
  if(playerOne) {
      $("#rockOne").on("click", function() {
          playerOneChoice = "rock"
+         console.log(playerOneChoice)
      });
      $("#paperOne").on("click", function() {
          playerOneChoice = "paper"
@@ -136,13 +136,14 @@ if (playerOneChoice === playerTwoChoice) {
  }
 
  if(playerTwo) {
-    $("#rockOne").on("click", function() {
+    $("#rockTwo").on("click", function() {
         playerTwoChoice = "rock"
+        console.log("hey")
     });
-    $("#paperOne").on("click", function() {
+    $("#paperTwo").on("click", function() {
         playerTwoChoice = "paper"
     });
-    $("#scissorsOne").on("click", function() {
+    $("#scissorsTwo").on("click", function() {
         playerTwoChoice = "scissors"
     });
 }
