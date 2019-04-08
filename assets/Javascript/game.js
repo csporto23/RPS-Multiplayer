@@ -40,6 +40,13 @@ var config = {
   var playerOneName = "";
   var playerTwoName = "";
 
+  function writeUserData(gameId, playerOneName,) {
+    firebase.database().ref('players/' + gameId).set({
+      name: playerOneName,
+      gameId: gameIdDiv
+    });
+  };
+
   //if person clicks new game
   $("#new-game").on("click", function(){
        var playerOneName = prompt("Player one Name:", "UserName");
