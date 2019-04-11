@@ -11,88 +11,77 @@ var config = {
   firebase.initializeApp(config);
   var database = firebase.database();
 
-  var playerOne = {
-      name: playerOneName,
-      wins: p1wins,
-      loses: p1loses,
-      choice: playerOneChoice,
-      comment: commentBox
-  }
+  //ties will only be counted for current games. reset to zero.
+  var tie = 0;
+  $("#tie").append(tie)
 
-  var playerTwo = {
-    name: playerOneName,
-    wins: p1wins,
-    loses: p1loses,
-    choice: playerOneChoice,
-    comment: addComment
+  var userNameOne = null;
+  var userNameTwo = null;
 
+
+  userData1 = {
+    player: "",
+    choice: "",
+    name: "",
+    comments: ""
 }
 
-  var p1wins = 0;
-  var p1loses = 0;
-  var p2wins = 0;
-  var p2loses = 0;
-  var tie = 0;
+userData2 = {
+    player: "",
+    choice: "",
+    name: "",
+    comments: ""
+}
 
-  var playerOneChoice = "";
-  var playerTwoChoice = "";
+// database.ref("/userName/").on("value", function(snapshot) {
+// 	// Check for existence of userName in the database
+// 	if (snapshot.child(userName).exists()) {
+// 		console.log("Player 1 exists");
 
-  var playerOneName = "";
-  var playerTwoName = "";
-
-  function writeUserData(gameId, playerOneName,) {
-    firebase.database().ref('players/' + gameId).set({
-      name: playerOneName,
-      gameId: gameIdDiv
-    });
-  };
-
+// 		// Record player1 data
+// 		userName = snapshot.val().userName;
+//         userNameName = userName.name;
+//     }
+// });
   //if person clicks new game
   $("#new-game").on("click", function(){
-       var playerOneName = prompt("Player one Name:", "UserName");
-       $("#userNameOne").text(playerOneName);
+        userNameOne = prompt("Player one Name:", "UserName");
+       $("#userNameOne").text(userNameOne);
+
+       
 
       $(".container").css("display", "block");
       $("#startButton").closest('div').remove();
 
-      var idNumber = Math.floor(Math.random() * 300);
-      $("#game-id").text(idNumber)
+     
+    //set initial Player too firebase by userName
+     
 
-    //set initial Player one too firebase by gameId
-     playerOne = {
-         name: playerOneName,
-         win: 0,
-         loss: 0,
-         tie: 0,
-         choice: ""
-     }
+    database.ref().child("/userName/" + userNameOne).set(userData1);
+    database.ref().child("/userName/" + userNameOne + "/player").set(userData1.player + "one");
+    database.ref().child("/userName/" + userNameOne + "/name").set(userData1.name + userNameOne);
+    
 
-     database.ref().child($("#game-id").text() + "/gameId/playerOne").set(playerOne);
+       });
 
-  });
+       
+    
 
+    //  userNameOne = database.ref().child("/userName/" + userNameOne)
 
   //if person clicks join game
   $("#join-game").on("click", function(){
-    //   var joinId = prompt("game id:", "Number");
-    //   $("#idNumber").append(joinId)
-      var playerTwoName = prompt("player two:", "UserName");
-      $("#userNameTwo").text(playerTwoName);
+      var userNameTwo = prompt("player two:", "Your UserName");
+      $("#userNameTwo").text(userNameTwo);
 
     $(".container").css("display", "block");
 
     $("#startButton").closest('div').remove();
 
-     //set initial Player two too firebase by gameId
-     playerTwo = {
-        name: playerTwoName,
-        win: 0,
-        loss: 0,
-        tie: 0,
-        choice: ""
-    }
 
-    database.ref().child($("#game-id").text() + "/gameId/playerTwo").set(playerTwo);
+    database.ref().child("/userName/" + userNameTwo).set(userData2);
+    database.ref().child("/userName/" + userNameTwo + "/player").set(userData2.player + "two");
+    database.ref().child("/userName/" + userNameTwo + "/name").set(userData2.name + userNameTwo);
 
 });
 
@@ -105,71 +94,73 @@ $("#submit-comment").on("click", function(event){
     addComment = $("#addComment").val().trim();
 
     database.ref().push({
-        addComment: addComment,
+         addComment,
     });
+
+    database.ref().on("child_added", function(snapshot) {
+
+        var sv = snapshot.val();
+       
+    
+        var commentBox = $("<p>").text($("#userNameOne").text() + ": " + sv.addComment);
+        //$("#commentBox").prepend(commentBox.html() + sv.playerOneName);
+        $("#commentBox").prepend(commentBox);
+    
+    }, function(errorObject) {
+        console.log("Errors handled: " + errorObject.code);
+      });
 });
 
-database.ref().on("child_added", function(snapshot) {
 
-    var sv = snapshot.val();
-   
-
-    var commentBox = $("<p>").text(sv.addComment);
-    //$("#commentBox").prepend(commentBox.html() + sv.playerOneName);
-    $("#commentBox").prepend(commentBox);
-
-}, function(errorObject) {
-    console.log("Errors handled: " + errorObject.code);
-  });
 
 
 
  //rock paper scissors game logic
 
-  if (playerOneChoice === "rock" && playerTwoChoice === "scissors") {
-      p1wins++, p2loses++ 
-  } else {
-      p1loses++, p2wins++
-  }
-
-  if (playerOneChoice === "scissors" && playerTwoChoice === "paper") {
-    p1wins++, p2loses++ 
-} else {
-    p1loses++, p2wins++
-}
-
-if (playerOneChoice === "paper" && playerTwoChoice === "rock") {
-    p1wins++, p2loses++ 
-} else {
-    p1loses++, p2wins++
-}
-
-if (playerOneChoice === playerTwoChoice) {
-    tie++
-}
-
- if(playerOne) {
+  
+ if(userData1.player === "one") {
      $("#rockOne").on("click", function() {
-         playerOneChoice = "rock"
-         console.log(playerOneChoice)
+        database.ref().child("/userName/" + userNameOne + "/player").set(userData1.choice + "rock");
      });
      $("#paperOne").on("click", function() {
-         playerOneChoice = "paper"
+        database.ref().child("/userName/" + userNameOne + "/player").set(userData1.choice + "paper");
      });
      $("#scissorsOne").on("click", function() {
-         playerOneChoice = "scissors"
+        database.ref().child("/userName/" + userNameOne + "/player").set(userData1.choice + "scissors");
      });
  }
 
- if(playerTwo) {
+ if(userData2.player === "two") {
     $("#rockTwo").on("click", function() {
-        playerTwoChoice = "rock"
+        database.ref().child("/userName/" + userNameTwo + "/player").set(userData2.choice + "rock");
         console.log("hey")
     });
     $("#paperTwo").on("click", function() {
-        playerTwoChoice = "paper"
+        database.ref().child("/userName/" + userNameTwo + "/player").set(userData2.choice + "paper");
     });
     $("#scissorsTwo").on("click", function() {
-        playerTwoChoice = "scissors"
+        database.ref().child("/userName/" + userNameTwo + "/player").set(userData2.choice + "scissors");
     });
+}
+
+if (userData1.choice === "rock" && userData2.choice === "scissors") {
+    
+} else {
+   
+}
+
+if (userData1.choice === "scissors" && userData2.choice === "paper") {
+  
+} else {
+ 
+}
+
+if (userData1.choice === "paper" && userData2.choice === "rock") {
+   
+} else {
+ 
+}
+
+if (userData1.choice === userData2.choice) {
+  tie++
 }
